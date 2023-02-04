@@ -1,1 +1,0 @@
-# charmed-kafka-rock
