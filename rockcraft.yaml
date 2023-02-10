@@ -5,7 +5,8 @@ summary: Charmed Kafka ROCK OCI # 79 char long summary
 description: |
     Kafka is generally used for two broad classes of applications:
     - Building real-time streaming data pipelines that reliably get data between systems or applications
-    - Building real-time streaming applications that transform or react to the streams of dat
+    - Building real-time streaming applications that transform or react to the streams of data
+
 license: Apache-2.0 # your application's SPDX license
 
 
