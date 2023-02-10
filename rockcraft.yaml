@@ -1,11 +1,15 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
 name: charmed-kafka # the name of your ROCK
 base: ubuntu:22.04 # the base environment for this ROCK
 version: '3.3.2' # just for humans. Semantic versioning is recommended
 summary: Charmed Kafka ROCK OCI # 79 char long summary
 description: |
     Kafka is generally used for two broad classes of applications:
-    - Building real-time streaming data pipelines that reliably get data between systems or applications
-    - Building real-time streaming applications that transform or react to the streams of data
+    - Building real-time streaming data pipelines that reliably get data
+      between systems or applications
+    - Building real-time streaming applications that transform or react
+      to the streams of data
 
 license: Apache-2.0 # your application's SPDX license
 
@@ -29,8 +33,10 @@ parts:
         stage-snaps:
             - charmed-kafka/latest/edge
         override-build: |
-              ln -s /usr/lib/jvm/java-17-openjdk-amd64/bin/java $CRAFT_PART_INSTALL/usr/bin/java
-              ln -s /usr/lib/jvm/java-17-openjdk-amd64/bin/keytool $CRAFT_PART_INSTALL/usr/bin/keytool
+              ln -s /usr/lib/jvm/java-17-openjdk-amd64/bin/java \
+                $CRAFT_PART_INSTALL/usr/bin/java
+              ln -s /usr/lib/jvm/java-17-openjdk-amd64/bin/keytool \
+                $CRAFT_PART_INSTALL/usr/bin/keytool
               mkdir -p $CRAFT_PART_INSTALL/var/lib/pebble/default/
               mkdir -p $CRAFT_PART_INSTALL/logs/kafka/
               mkdir -p $CRAFT_PART_INSTALL/data/kafka/
