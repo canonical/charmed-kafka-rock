@@ -6,7 +6,13 @@ For more information on ROCKs, visit the [rockcraft Github](https://github.com/c
 
 ## Building the ROCK
 The steps outlined below are based on the assumption that you are building the ROCK with the latest LTS of Ubuntu.  
-If you are using another version of Ubuntu or another operating system, the process may be different.
+If you are using another version of Ubuntu or another operating system, the process may be different. 
+To avoid any issue with other operating systems you can simply build the image with [multipass](https://multipass.run/):
+```bash
+sudo snap install multipass
+multipass launch 22.04 -n rock-dev
+multipass shell rock-dev
+``` 
 
 ### Clone Repository
 ```bash

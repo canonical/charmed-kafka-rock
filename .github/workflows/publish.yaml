@@ -45,5 +45,5 @@ jobs:
             --insecure-policy \
             copy \
             oci-archive:"charmed-kafka_${version}_amd64.rock" \
-            docker-daemon:"dataplatformoci/charmed-kafka:${version}"
-          docker push "dataplatformoci/charmed-kafka:${version}"
+            docker-daemon:"charmed/charmed-kafka:${version}"
+          docker push "charmed/charmed-kafka:${version}"
