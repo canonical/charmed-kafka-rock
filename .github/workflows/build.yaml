@@ -4,8 +4,20 @@ on:
   workflow_call:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install tox
+        run: python3 -m pip install tox
+      - name: YAML Lint
+        run: tox -e lint
+
   build:
     runs-on: ubuntu-latest
+    needs:
+      - lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
