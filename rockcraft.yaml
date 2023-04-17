@@ -54,10 +54,6 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/var/log/kafka/
       mkdir -p $CRAFT_PART_INSTALL/opt/kafka/
       mkdir -p $CRAFT_PART_INSTALL/etc/kafka/
-
-      # creating kafka root_dir
-      mkdir -p $CRAFT_PART_INSTALL/opt/kafka/libs
-      mkdir -p $CRAFT_PART_INSTALL/opt/kafka/bin
     override-prime: |
       craftctl default
       rm -vf usr/lib/jvm/java-17-openjdk-amd64/lib/security/cacerts
