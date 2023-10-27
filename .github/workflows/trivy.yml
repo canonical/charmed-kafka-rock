@@ -45,7 +45,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         run: |
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            aquasec/trivy:latest -b sarif -h trivy-results.sarif image $USER/charmed-kafka:test
+            aquasec/trivy:latest -f sarif -o trivy-results.sarif image $USER/charmed-kafka:test
         # uses: aquasecurity/trivy-action@master
         # with:
         #   image-ref: '$USER/charmed-kafka:test'
