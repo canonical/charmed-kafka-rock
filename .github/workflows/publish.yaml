@@ -43,7 +43,7 @@ jobs:
           version=$(yq '(.version|split("-"))[0]' rockcraft.yaml)
           base=$(yq '(.base|split("@"))[1]' rockcraft.yaml)
           risk=edge
-          tag=${version}-${base}_${risk}
+          tag=${version}-${base}-${risk}
           channel=$(echo ${{ github.ref_name }} | cut -d "-" -f 1)
 
           sudo skopeo --insecure-policy copy \

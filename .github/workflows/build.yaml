@@ -40,7 +40,7 @@ jobs:
           version=$(yq '(.version|split("-"))[0]' rockcraft.yaml)
           base=$(yq '(.base|split("@"))[1]' rockcraft.yaml)
           risk=edge
-          tag=${version}-${base}_${risk}
+          tag=${version}-${base}-${risk}
 
           sed -i "s/${app_version}/${tag}/g" rockcraft.yaml
           rockcraft pack --verbose
