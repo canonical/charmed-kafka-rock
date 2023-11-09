@@ -43,7 +43,7 @@ jobs:
           tag=${version}-${base}_${risk}
 
           rockcraft pack --verbose
-          mv charmed-kafka_3.5.1_amd64.rock charmed-kafka_${tag}_amd64.rock
+          mv charmed-kafka_${version}_amd64.rock charmed-kafka_${tag}_amd64.rock
 
       - name: Upload locally built ROCK artifact
         uses: actions/upload-artifact@v3
