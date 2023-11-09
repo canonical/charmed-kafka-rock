@@ -2,7 +2,7 @@ name: trivy
 on:
   push:
     branches:
-      - main
+      - 3-22.04
   pull_request:
 jobs:
   build:
