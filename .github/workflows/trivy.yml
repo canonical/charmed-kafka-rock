@@ -23,13 +23,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: charmed-kafka
-      - name: Setup LXD
-        run: |
-          lxd waitready
-          lxd init --auto
-          lxc network set lxdbr0 ipv6.address none
-          sudo iptables -F FORWARD
-          sudo iptables -P FORWARD ACCEPT
       - name: Import locally
         run: |
           version=$(yq '(.version|split("-"))[0]' rockcraft.yaml)
