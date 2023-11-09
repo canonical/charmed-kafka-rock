@@ -34,19 +34,13 @@ jobs:
             oci-archive:charmed-kafka_${tag}_amd64.rock \
             docker-daemon:$USER/charmed-kafka:test
 
-          docker image ls
-
       - name: Run Trivy vulnerability scanner
-        # run: |
-        #   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/result \
-        #     aquasec/trivy:latest -f sarif -o /result/trivy-results.sarif --severity HIGH,CRITICAL \
-        #     image $USER/charmed-kafka:test
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'runner/charmed-kafka:test'
+          image-ref: '$USER/charmed-kafka:test'
           format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'HIGH,CRITICAL'
+          severity: 'MEDIUM,HIGH,CRITICAL'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
