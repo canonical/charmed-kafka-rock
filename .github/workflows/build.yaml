@@ -35,6 +35,7 @@ jobs:
           sudo snap install yq
           sudo snap install rockcraft --classic --edge
       - name: Build ROCK
+        id: build
         run: |
           rockcraft pack --verbose
 
