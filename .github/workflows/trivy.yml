@@ -25,13 +25,8 @@ jobs:
           name: charmed-kafka
       - name: Import locally
         run: |
-          version=$(yq '(.version|split("-"))[0]' rockcraft.yaml)
-          base=$(yq '(.base|split("@"))[1]' rockcraft.yaml)
-          risk=edge
-          tag=${version}-${base}_${risk}
-
           sudo skopeo --insecure-policy copy \
-            oci-archive:charmed-kafka_${tag}_amd64.rock \
+            oci-archive:${{ needs.build.outputs.rock }} \
             docker-daemon:trivy/charmed-kafka:test
 
       - name: Run Trivy vulnerability scanner
