@@ -1,5 +1,7 @@
 # Charmed Kafka ROCK
 
+[![Release](https://github.com/canonical/charmed-kafka-rock/actions/workflows/publish.yaml/badge.svg)](https://github.com/canonical/charmed-kafka-rock/actions/workflows/publish.yaml)
+
 This repository contains the packaging metadata for creating a Charmed Kafka ROCK. This ROCK image is based on the [Charmed Kafka Snap](https://github.com/canonical/charmed-kafka-snap)  
 
 For more information on ROCKs, visit the [rockcraft Github](https://github.com/canonical/rockcraft). 
