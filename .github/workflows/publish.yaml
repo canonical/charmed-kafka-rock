@@ -80,12 +80,11 @@ jobs:
       - name: Import and push to GHCR
         run: |
       
-          REPOSITORY="ghcr.io/canonical/"
           RISK=${{ needs.release_checks.outputs.risk }}
           TRACK=${{ needs.release_checks.outputs.track }}
           if [ ! -z "$RISK" ] && [ "${RISK}" != "no-risk" ]; then TAG=${TRACK}_${RISK}; else TAG=${TRACK}; fi
       
-          IMAGE_NAME="${REPOSITORY}charmed-kafka"
+          IMAGE_NAME="ghcr.io/canonical/charmed-kafka"
 
           ROCK_FILE=${{ needs.build.outputs.rock }}
 
@@ -109,6 +108,3 @@ jobs:
             echo "Publishing ${IMAGE_NAME}:${VERSION_TAG}"          
             docker push ${IMAGE_NAME}:${VERSION_TAG}
           fi
-          
-          
-          
