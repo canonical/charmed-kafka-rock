@@ -8,12 +8,12 @@ jobs:
   build:
     uses: ./.github/workflows/build.yaml
   scan:
-    name: Trivy scan
+    name: Trivy scan and SBOM Generation
     needs: build
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install rockcraft (for skopeo)
         run: |
           sudo snap install rockcraft --classic --edge
