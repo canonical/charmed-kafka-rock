@@ -75,4 +75,3 @@ parts:
         var/log/kafka \
         etc/kafka \
         var/log/connect
-
