@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 3-22.04
+      - 4-24.04
 
 jobs:
 

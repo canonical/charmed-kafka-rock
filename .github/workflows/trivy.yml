@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 3-22.04
+      - 4-24.04
   pull_request:
 jobs:
   build:
@@ -10,7 +11,7 @@ jobs:
   scan:
     name: Trivy scan and SBOM Generation
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
