@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 ---
 name: charmed-kafka  # the name of your ROCK
-base: ubuntu@22.04  # the base environment for this ROCK
+base: ubuntu@24.04  # the base environment for this ROCK
 version: '4.0.0'  # just for humans. Semantic versioning is recommended
 summary: Charmed Kafka ROCK OCI  # 79 char long summary
 description: |
@@ -64,12 +64,13 @@ parts:
     after: [kafka]
     overlay-script: |
       # Create a user in the $CRAFT_OVERLAY chroot
-      groupadd -R $CRAFT_OVERLAY -g 1000 kafka
-      useradd -R $CRAFT_OVERLAY -M -r -g kafka -u 1000 kafka
+      # This user is the same as the one in the snap
+      groupadd -R $CRAFT_OVERLAY -g 584792 kafka
+      useradd -R $CRAFT_OVERLAY -M -r -g kafka -u 584792 kafka
     override-prime: |
       craftctl default
       # Give permission ot the required folders
-      install -d -o 1000 -g 1000 -m 770 \
+      install -d -o 584792 -g 584792 -m 770 \
         opt/kafka \
         var/lib/kafka \
         var/log/kafka \
