@@ -13,7 +13,7 @@ If you are using another version of Ubuntu or another operating system, the proc
 To avoid any issue with other operating systems you can simply build the image with [multipass](https://multipass.run/):
 ```bash
 sudo snap install multipass
-multipass launch 22.04 -n rock-dev
+multipass launch 24.04 -n rock-dev
 multipass shell rock-dev
 ``` 
 
