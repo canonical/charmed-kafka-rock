@@ -66,7 +66,7 @@ parts:
       # Create a user in the $CRAFT_OVERLAY chroot
       # This user is the same as the one in the snap
       groupadd -R $CRAFT_OVERLAY -g 584792 kafka
-      useradd -R $CRAFT_OVERLAY -M -r -g kafka -u 584792 kafka
+      useradd -R $CRAFT_OVERLAY -m -r -g kafka -u 584792 kafka
     override-prime: |
       craftctl default
       # Give permission ot the required folders
