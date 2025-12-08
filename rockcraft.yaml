@@ -51,10 +51,13 @@ parts:
       # making core dirs
       mkdir -p $CRAFT_PART_INSTALL/var/lib/pebble/default/
       mkdir -p $CRAFT_PART_INSTALL/var/lib/kafka/
-      mkdir -p $CRAFT_PART_INSTALL/var/log/kafka/
       mkdir -p $CRAFT_PART_INSTALL/opt/kafka/
       mkdir -p $CRAFT_PART_INSTALL/etc/kafka/
+      mkdir -p $CRAFT_PART_INSTALL/etc/connect/
+      mkdir -p $CRAFT_PART_INSTALL/etc/cruise-control/
+      mkdir -p $CRAFT_PART_INSTALL/var/log/kafka/
       mkdir -p $CRAFT_PART_INSTALL/var/log/connect/
+      mkdir -p $CRAFT_PART_INSTALL/var/log/cruise-control/
     organize:
       bin: opt/kafka/bin/
       libs: opt/kafka/libs/
@@ -66,13 +69,16 @@ parts:
       # Create a user in the $CRAFT_OVERLAY chroot
       # This user is the same as the one in the snap
       groupadd -R $CRAFT_OVERLAY -g 584792 kafka
-      useradd -R $CRAFT_OVERLAY -M -r -g kafka -u 584792 kafka
+      useradd -R $CRAFT_OVERLAY -m -r -g kafka -u 584792 kafka
     override-prime: |
       craftctl default
       # Give permission ot the required folders
       install -d -o 584792 -g 584792 -m 770 \
         opt/kafka \
         var/lib/kafka \
-        var/log/kafka \
         etc/kafka \
-        var/log/connect
+        etc/connect \
+        etc/cruise-control \
+        var/log/kafka \
+        var/log/connect \
+        var/log/cruise-control
