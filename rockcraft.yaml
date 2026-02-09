@@ -40,9 +40,9 @@ parts:
       - curl
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
-      - SNAP_REVISION: 67
+    stage-snaps:
+      - charmed-kafka/4/edge
     override-build: |
-      snap install charmed-kafka --revision $SNAP_REVISION
       ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
       ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/keytool \
