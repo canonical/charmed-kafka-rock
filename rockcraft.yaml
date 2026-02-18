@@ -40,9 +40,11 @@ parts:
       - curl
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
-    stage-snaps:
-      - charmed-kafka/4/edge
+      - SNAP_REVISION: 67
     override-build: |
+      snap download charmed-kafka --revision $SNAP_REVISION
+      unsquashfs charmed-kafka_$SNAP_REVISION.snap
+
       ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
       ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/keytool \
@@ -59,9 +61,7 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/var/log/connect/
       mkdir -p $CRAFT_PART_INSTALL/var/log/cruise-control/
     organize:
-      bin: opt/kafka/bin/
-      libs: opt/kafka/libs/
-      config: opt/kafka/config/
+      /root/parts/kafka/build/squashfs-root: /
   non-root-user:
     plugin: nil
     after: [kafka]
