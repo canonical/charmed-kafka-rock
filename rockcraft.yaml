@@ -3,7 +3,7 @@
 ---
 name: charmed-kafka  # the name of your ROCK
 base: ubuntu@24.04  # the base environment for this ROCK
-version: '4.1.1'  # just for humans. Semantic versioning is recommended
+version: '4.2.0'  # just for humans. Semantic versioning is recommended
 summary: Charmed Kafka ROCK OCI  # 79 char long summary
 description: |
   This is an OCI image that bundles Apache Kafka together with other tools
@@ -40,7 +40,7 @@ parts:
       - curl
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
-      - SNAP_REVISION: 67
+      - SNAP_REVISION: 69
     override-build: |
       snap download charmed-kafka --revision $SNAP_REVISION
       unsquashfs charmed-kafka_$SNAP_REVISION.snap
