@@ -1,10 +1,10 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 ---
-name: charmed-kafka  # the name of your ROCK
-base: ubuntu@24.04  # the base environment for this ROCK
-version: '4.3.0'  # just for humans. Semantic versioning is recommended
-summary: Charmed Kafka ROCK OCI  # 79 char long summary
+name: charmed-kafka
+base: ubuntu@24.04
+version: '4.3.0'
+summary: Charmed Kafka ROCK OCI
 description: |
   This is an OCI image that bundles Apache Kafka together with other tools
   of its ecosystem in order to be used in Charmed Operators, providing
@@ -12,20 +12,23 @@ description: |
   distributed coodrdinator, on top of a Virtual Machine cluster and K8s cluster.
   It is an open source, end-to-end, production ready data platform on top of
   cloud native technologies.
-license: Apache-2.0  # your application's SPDX license
+license: Apache-2.0
 
-platforms:  # The platforms this ROCK should be built on and run on
+platforms:
   amd64:
+  arm64:
+
+run_user: _daemon_
+
+environment:
+  JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
 
 services:
   kafka:
     override: replace
     command: /opt/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties
     startup: enabled
-    user: kafka
-    group: kafka
     environment:
-      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
       KAFKA_OPTS: "-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent.jar=\n
         9101:/etc/kafka/jmx_prometheus.yaml\n
         -Djava.security.auth.login.config=\n
@@ -40,11 +43,15 @@ parts:
       - curl
       - python3
     build-environment:
-      - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
-      - SNAP_REVISION: 77
+      - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
+      - SNAP_REVISION_amd64: "75"
+      - SNAP_REVISION_arm64: "74"
     override-build: |
-      snap download charmed-kafka --revision $SNAP_REVISION
-      unsquashfs charmed-kafka_$SNAP_REVISION.snap
+      REV_VAR="SNAP_REVISION_${CRAFT_ARCH_BUILD_FOR}"
+      SNAP_REVISION="${!REV_VAR}"
+
+      snap download charmed-kafka --revision "$SNAP_REVISION"
+      unsquashfs "charmed-kafka_${SNAP_REVISION}.snap"
 
       rm -rf squashfs-root/bin  # Python binaries are not required
       mkdir -p squashfs-root/opt/python-exporter
@@ -52,9 +59,9 @@ parts:
       mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
       mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
 
-      ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
+      ln -s $JAVA_HOME/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
-      ln -s /usr/lib/jvm/java-21-openjdk-amd64/bin/keytool \
+      ln -s $JAVA_HOME/bin/keytool \
         $CRAFT_PART_INSTALL/usr/bin/keytool
 
       # making core dirs
@@ -72,21 +79,25 @@ parts:
   non-root-user:
     plugin: nil
     after: [kafka]
-    overlay-script: |
-      # Create a user in the $CRAFT_OVERLAY chroot
-      # This user is the same as the one in the snap
-      groupadd -R $CRAFT_OVERLAY -g 584792 kafka
-      useradd -R $CRAFT_OVERLAY -m -r -g kafka -u 584792 kafka
     override-prime: |
+      KAFKA_GID=584792
+      KAFKA_UID=584792
+
       craftctl default
-      # Give permission ot the required folders
-      install -d -o 584792 -g 584792 -m 770 \
+
+      # Own and restrict the application and config directories
+      for dir in \
         opt/kafka \
         opt/python-exporter \
+        etc/kafka etc/connect \
+        etc/cruise-control; do
+          chown -R ${KAFKA_UID}:${KAFKA_GID} ${dir}
+          chmod -R 750 ${dir}
+      done
+
+      # Create data and log directories owned by the runtime user
+      install -d -o ${KAFKA_UID} -g ${KAFKA_GID} -m 770 \
         var/lib/kafka \
-        etc/kafka \
-        etc/connect \
-        etc/cruise-control \
         var/log/kafka \
         var/log/connect \
         var/log/cruise-control
