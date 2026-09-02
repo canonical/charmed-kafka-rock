@@ -1,0 +1,44 @@
+# Copyright 2026 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+name: CI pipeline
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint rockcraft.yaml
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install tooling
+        run: sudo apt install tox yamllint
+
+      - name: Lint
+        run: |
+          yamllint -d "{extends: relaxed, rules: {line-length: {max: 150}}}" \
+            --no-warnings rockcraft.yaml
+
+  build-rock:
+    name: Build rock
+    needs: [lint]
+    uses: canonical/data-platform-workflows/.github/workflows/build_rock.yaml@v50.2.1
+
+  trivy:
+    name: CVE Scanning
+    needs: [build-rock]
+    uses: ./.github/workflows/trivy.yaml
+    permissions:
+      contents: read
+      security-events: write
