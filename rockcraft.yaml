@@ -45,9 +45,6 @@ parts:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
       - SNAP_REVISION: 69
     override-build: |
-      REV_VAR="SNAP_REVISION_${CRAFT_ARCH_BUILD_FOR}"
-      SNAP_REVISION="${!REV_VAR}"
-
       snap download charmed-kafka --revision "$SNAP_REVISION"
       unsquashfs "charmed-kafka_${SNAP_REVISION}.snap"
 
@@ -87,6 +84,15 @@ parts:
       # Own and restrict the application and config directories
       for dir in \
         opt/kafka \
+        etc/kafka \
+        etc/connect \
+        etc/cruise-control ;do
+          chown -R ${KAFKA_UID}:${KAFKA_GID} ${dir}
+          chmod -R 750 ${dir}
+      done
+
+      # Create data and log directories owned by the runtime user
+      install -d -o ${KAFKA_UID} -g ${KAFKA_GID} -m 770 \
         var/lib/kafka \
         var/log/kafka \
         var/log/connect \
