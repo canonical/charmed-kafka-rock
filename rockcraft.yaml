@@ -1,10 +1,10 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 ---
-name: charmed-kafka
-base: ubuntu@24.04
-version: '4.3.0'
-summary: Charmed Kafka ROCK OCI
+name: charmed-kafka  # the name of your ROCK
+base: ubuntu@24.04  # the base environment for this ROCK
+version: '4.2.0'  # just for humans. Semantic versioning is recommended
+summary: Charmed Kafka ROCK OCI  # 79 char long summary
 description: |
   This is an OCI image that bundles Apache Kafka together with other tools
   of its ecosystem in order to be used in Charmed Operators, providing
@@ -41,23 +41,19 @@ parts:
       - openjdk-21-jre-headless
       - libpsl5
       - curl
-      - python3
     build-environment:
-      - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
-      - SNAP_REVISION_amd64: "75"
-      - SNAP_REVISION_arm64: "74"
+      - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
+      - SNAP_REVISION: 69
     override-build: |
-      REV_VAR="SNAP_REVISION_${CRAFT_ARCH_BUILD_FOR}"
-      SNAP_REVISION="${!REV_VAR}"
-
       snap download charmed-kafka --revision "$SNAP_REVISION"
       unsquashfs "charmed-kafka_${SNAP_REVISION}.snap"
 
-      rm -rf squashfs-root/bin  # Python binaries are not required
-      mkdir -p squashfs-root/opt/python-exporter
-      # to avoid lib conflicts
-      mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
-      mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
+      # Python exporter fixes, not present in 4.2
+      # rm -rf squashfs-root/bin  # Python binaries are not required
+      # mkdir -p squashfs-root/opt/python-exporter
+      # # to avoid lib conflicts
+      # mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
+      # mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
 
       ln -s $JAVA_HOME/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
@@ -88,9 +84,9 @@ parts:
       # Own and restrict the application and config directories
       for dir in \
         opt/kafka \
-        opt/python-exporter \
-        etc/kafka etc/connect \
-        etc/cruise-control; do
+        etc/kafka \
+        etc/connect \
+        etc/cruise-control ;do
           chown -R ${KAFKA_UID}:${KAFKA_GID} ${dir}
           chmod -R 750 ${dir}
       done
