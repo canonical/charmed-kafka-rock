@@ -41,6 +41,7 @@ parts:
       - openjdk-21-jre-headless
       - libpsl5
       - curl
+      - python3
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
       - SNAP_REVISION_amd64: "75"
@@ -52,12 +53,11 @@ parts:
       snap download charmed-kafka --revision "$SNAP_REVISION"
       unsquashfs "charmed-kafka_${SNAP_REVISION}.snap"
 
-      # Python exporter fixes, not present in 4.2
-      # rm -rf squashfs-root/bin  # Python binaries are not required
-      # mkdir -p squashfs-root/opt/python-exporter
-      # # to avoid lib conflicts
-      # mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
-      # mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
+      rm -rf squashfs-root/bin  # Python binaries are not required
+      mkdir -p squashfs-root/opt/python-exporter
+      # to avoid lib conflicts
+      mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
+      mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
 
       ln -s $JAVA_HOME/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
