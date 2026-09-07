@@ -16,9 +16,6 @@ license: Apache-2.0
 
 platforms:
   amd64:
-  arm64:
-
-run_user: _daemon_
 
 environment:
   JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
@@ -28,6 +25,8 @@ services:
     override: replace
     command: /opt/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties
     startup: enabled
+    user: kafka
+    group: kafka
     environment:
       KAFKA_OPTS: "-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent.jar=\n
         9101:/etc/kafka/jmx_prometheus.yaml\n
@@ -75,6 +74,10 @@ parts:
   non-root-user:
     plugin: nil
     after: [kafka]
+    overlay-script: |
+      # Create a user in the $CRAFT_OVERLAY
+      groupadd -R $CRAFT_OVERLAY -g 584792 kafka
+      useradd -R $CRAFT_OVERLAY -m -r -g kafka -u 584792 kafka
     override-prime: |
       KAFKA_GID=584792
       KAFKA_UID=584792
