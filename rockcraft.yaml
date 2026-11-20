@@ -3,7 +3,7 @@
 ---
 name: charmed-kafka
 base: ubuntu@24.04
-version: '4.3.0'
+version: '4.4.0'
 summary: Charmed Kafka ROCK OCI
 description: |
   This is an OCI image that bundles Apache Kafka together with other tools
@@ -44,8 +44,8 @@ parts:
       - python3
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
-      - SNAP_REVISION_amd64: "75"
-      - SNAP_REVISION_arm64: "74"
+      - SNAP_REVISION_amd64: "79"
+      - SNAP_REVISION_arm64: "78"
     override-build: |
       REV_VAR="SNAP_REVISION_${CRAFT_ARCH_BUILD_FOR}"
       SNAP_REVISION="${!REV_VAR}"
@@ -58,6 +58,7 @@ parts:
       # to avoid lib conflicts
       mv squashfs-root/lib squashfs-root/opt/python-exporter/lib
       mv squashfs-root/lib64 squashfs-root/opt/python-exporter/lib64
+      mv squashfs-root $CRAFT_PART_INSTALL/squashfs-root
 
       ln -s $JAVA_HOME/bin/java \
         $CRAFT_PART_INSTALL/usr/bin/java
@@ -75,7 +76,7 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/var/log/connect/
       mkdir -p $CRAFT_PART_INSTALL/var/log/cruise-control/
     organize:
-      /root/parts/kafka/build/squashfs-root: /
+      squashfs-root: /
   non-root-user:
     plugin: nil
     after: [kafka]
